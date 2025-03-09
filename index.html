@@ -1,0 +1,1125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Too Kool To Kalypso</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #220033; /* Darker purple background */
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+        
+        #game-container {
+            position: relative;
+            width: 800px;
+            height: 400px;
+            background-color: #330044; /* Deeper purple for more disco vibes */
+            overflow: hidden;
+            border: 3px solid #8800aa;
+        }
+        
+        #dance-floor {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                90deg,
+                #440066 0px,
+                #440066 60px,
+                #660099 60px,
+                #660099 120px
+            );
+            animation: scroll 2s linear infinite;
+            box-shadow: inset 0 0 50px rgba(255, 0, 255, 0.5); /* Interior glow */
+        }
+        
+        @keyframes scroll {
+            from { background-position: 0 0; }
+            to { background-position: -120px 0; }
+        }
+        
+        #player {
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            left: 100px;
+            top: 180px;
+            background-color: #000;
+            z-index: 10;
+            box-shadow: 0 0 10px #fff, 0 0 20px #00ffff; /* Glow effect for better visibility */
+        }
+        
+        /* Style for the hat */
+        #player:before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 0;
+            width: 20px;
+            height: 5px;
+            background-color: #0F0;
+        }
+        
+        .dancer {
+            position: absolute;
+            width: 30px;
+            height: 50px;
+            right: -50px;
+            z-index: 5;
+            filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.7)); /* Glow effect for dancers */
+        }
+        
+        .dancer-body {
+            position: absolute;
+            width: 4px;
+            height: 20px;
+            background-color: #F06;
+            left: 13px;
+            top: 10px;
+        }
+        
+        .dancer-head {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #F06;
+            border-radius: 50%;
+            left: 10px;
+            top: 0;
+        }
+        
+        .dancer-arm-left, .dancer-arm-right {
+            position: absolute;
+            width: 12px;
+            height: 3px;
+            background-color: #F06;
+            top: 12px;
+        }
+        
+        .dancer-arm-left {
+            left: 1px;
+            transform-origin: right center;
+        }
+        
+        .dancer-arm-right {
+            left: 17px;
+            transform-origin: left center;
+        }
+        
+        .dancer-leg-left, .dancer-leg-right {
+            position: absolute;
+            width: 4px;
+            height: 20px;
+            background-color: #F06;
+            top: 30px;
+        }
+        
+        .dancer-leg-left {
+            left: 8px;
+            transform-origin: top center;
+        }
+        
+        .dancer-leg-right {
+            left: 18px;
+            transform-origin: top center;
+        }
+        
+        /* Dance poses */
+        .dance-pose-1 .dancer-arm-left {
+            transform: rotate(-45deg);
+        }
+        
+        .dance-pose-1 .dancer-arm-right {
+            transform: rotate(45deg);
+        }
+        
+        .dance-pose-1 .dancer-leg-left {
+            transform: rotate(-15deg);
+        }
+        
+        .dance-pose-1 .dancer-leg-right {
+            transform: rotate(15deg);
+        }
+        
+        .dance-pose-2 .dancer-arm-left {
+            transform: rotate(45deg);
+        }
+        
+        .dance-pose-2 .dancer-arm-right {
+            transform: rotate(-45deg);
+        }
+        
+        .dance-pose-2 .dancer-leg-left {
+            transform: rotate(15deg);
+        }
+        
+        .dance-pose-2 .dancer-leg-right {
+            transform: rotate(-15deg);
+        }
+        
+        #dialogue-box {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            background-color: transparent;
+            padding: 10px;
+            color: white;
+            text-align: center;
+            z-index: 30;
+            font-size: 18px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8), 0 0 10px #ff00ff;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+        
+        #game-over-dancer-container {
+            position: relative;
+            width: 100px;
+            height: 120px;
+            background-color: #F06;
+            border-radius: 10px;
+            margin: 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 20px #ff00ff; /* Add glow to dancer container */
+        }
+        
+        #game-over-dancer {
+            position: relative;
+            width: 50px;
+            height: 100px;
+            display: inline-block;
+        }
+        
+        #game-over-dancer .dancer-head {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            background-color: #000;
+            border-radius: 50%;
+            left: 15px;
+            top: 0;
+        }
+        
+        #game-over-dancer .dancer-body {
+            position: absolute;
+            width: 6px;
+            height: 30px;
+            background-color: #000;
+            left: 22px;
+            top: 20px;
+        }
+        
+        #game-over-dancer .dancer-hat {
+            position: absolute;
+            width: 24px;
+            height: 6px;
+            background-color: #0F0;
+            left: 13px;
+            top: -6px;
+        }
+        
+        #game-over-dancer .dancer-arm-left,
+        #game-over-dancer .dancer-arm-right {
+            position: absolute;
+            width: 20px;
+            height: 4px;
+            background-color: #000;
+            top: 25px;
+        }
+        
+        #game-over-dancer .dancer-arm-left {
+            left: 2px;
+            transform-origin: right center;
+            animation: dance-arm-left 0.6s infinite alternate;
+        }
+        
+        #game-over-dancer .dancer-arm-right {
+            left: 28px;
+            transform-origin: left center;
+            animation: dance-arm-right 0.6s infinite alternate;
+        }
+        
+        #game-over-dancer .dancer-leg-left,
+        #game-over-dancer .dancer-leg-right {
+            position: absolute;
+            width: 6px;
+            height: 40px;
+            background-color: #000;
+            top: 50px;
+        }
+        
+        #game-over-dancer .dancer-leg-left {
+            left: 15px;
+            transform-origin: top center;
+            animation: dance-leg-left 0.6s infinite alternate;
+        }
+        
+        #game-over-dancer .dancer-leg-right {
+            left: 29px;
+            transform-origin: top center;
+            animation: dance-leg-right 0.6s infinite alternate;
+        }
+        
+        /* Dance animations for game over */
+        @keyframes dance-arm-left {
+            0% { transform: rotate(-20deg); }
+            100% { transform: rotate(60deg); }
+        }
+        
+        @keyframes dance-arm-right {
+            0% { transform: rotate(20deg); }
+            100% { transform: rotate(-60deg); }
+        }
+        
+        @keyframes dance-leg-left {
+            0% { transform: rotate(-10deg); }
+            100% { transform: rotate(30deg); }
+        }
+        
+        @keyframes dance-leg-right {
+            0% { transform: rotate(10deg); }
+            100% { transform: rotate(-30deg); }
+        }
+        
+        #score {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-size: 20px;
+            z-index: 20;
+            text-shadow: 0 0 5px #ff00ff; /* Add neon glow to score */
+        }
+        
+        #game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(68, 0, 102, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 50;
+            display: none;
+            text-shadow: 0 0 10px #ff00ff; /* Add neon glow to game over text */
+        }
+        
+        #game-over h2 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        
+        #game-over button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #F06;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 0 15px #ff00ff; /* Add glow to button */
+        }
+        
+        #start-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(68, 0, 102, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 50;
+            text-shadow: 0 0 10px #ff00ff, 0 0 20px #00ffff; /* Add multi-colored neon glow */
+        }
+        
+        #start-screen h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+        
+        #start-screen p {
+            font-size: 18px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        #start-screen button {
+            padding: 10px 20px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #F06;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 0 15px #ff00ff; /* Add glow to button */
+        }
+        
+        .lane {
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            background-color: rgba(255, 0, 255, 0.4); /* Make lanes more visible with pink glow */
+            box-shadow: 0 0 5px #ff00ff; /* Add glow to lanes */
+        }
+        
+        /* Mobile controls - only shown on mobile devices */
+        .mobile-controls {
+            display: none; /* Hidden by default */
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 80px;
+            z-index: 100;
+            background-color: rgba(68, 0, 102, 0.7);
+        }
+        
+        .mobile-up, .mobile-down {
+            position: absolute;
+            width: 50%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        .mobile-up {
+            left: 0;
+            border-right: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .mobile-down {
+            right: 0;
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .control-arrow {
+            width: 0;
+            height: 0;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+        }
+        
+        .up-arrow {
+            border-bottom: 20px solid white;
+        }
+        
+        .down-arrow {
+            border-top: 20px solid white;
+        }
+        
+        /* Libido Torpedo styles */
+        .libido-torpedo {
+            position: absolute;
+            width: 80px;
+            height: 26px;
+            z-index: 15;
+            filter: drop-shadow(0 0 8px rgba(255, 105, 180, 0.8)); /* Add glow to torpedoes */
+        }
+        
+        .torpedo-body {
+            position: absolute;
+            width: 60px;
+            height: 20px;
+            background-color: #2d3933; /* Darker body color for better text contrast */
+            border-radius: 0;
+            left: 8px;
+            top: 3px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #FF69B4; /* Pink text */
+            font-weight: bold;
+            font-size: 10px;
+        }
+        
+        .torpedo-nose {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: #2ab865;
+            border-radius: 0;
+            right: 0; /* Flipped: was left: 0 */
+            top: 7px;
+        }
+        
+        .torpedo-tail {
+            position: absolute;
+            width: 10px;
+            height: 14px;
+            background-color: #2ab865;
+            left: 0; /* Flipped: was right: 0 */
+            top: 6px;
+            clip-path: polygon(100% 0, 100% 100%, 0 50%); /* Flipped direction */
+        }
+        
+        .torpedo-fin-top {
+            position: absolute;
+            width: 8px;
+            height: 6px;
+            background-color: #2ab865;
+            right: 20px; /* Flipped: was left: 20px */
+            top: 0;
+        }
+        
+        .torpedo-fin-bottom {
+            position: absolute;
+            width: 8px;
+            height: 6px;
+            background-color: #2ab865;
+            right: 20px; /* Flipped: was left: 20px */
+            bottom: 0;
+        }
+        
+        /* Explosion animation */
+        .explosion {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #F60;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            animation: explode 0.5s forwards;
+            box-shadow: 0 0 30px #ff9900; /* Add glow to explosions */
+        }
+        
+        @keyframes explode {
+            0% { transform: scale(0.1); opacity: 1; }
+            70% { transform: scale(1.2); opacity: 0.7; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <div id="dance-floor"></div>
+        <div id="player"></div>
+        <div id="score">Score: 0</div>
+        <!-- Add the dialogue box to the initial HTML -->
+        <div id="dialogue-box">Try to leave Klub Romance without losing your cool</div>
+        
+        <!-- Lane markers - now 5 lanes -->
+        <div class="lane" style="top: 80px;"></div>
+        <div class="lane" style="top: 140px;"></div>
+        <div class="lane" style="top: 200px;"></div>
+        <div class="lane" style="top: 260px;"></div>
+        <div class="lane" style="top: 320px;"></div>
+        
+        <!-- Mobile controls - hidden by default -->
+        <div id="mobile-controls" class="mobile-controls">
+            <div class="mobile-up">
+                <div class="control-arrow up-arrow"></div>
+            </div>
+            <div class="mobile-down">
+                <div class="control-arrow down-arrow"></div>
+            </div>
+        </div>
+        
+        <div id="start-screen">
+            <h1>Too Kool To Kalypso</h1>
+            <p>Try to leave Klub Romance without losing your cool.<br>Use Arrow Keys or W/S to move.</p>
+            <button id="start-button">Start Dancing</button>
+        </div>
+        
+        <div id="game-over">
+            <h2>Game Over</h2>
+            <p id="game-over-message">You find yourself dancing the Kalypso!</p>
+            
+            <div id="game-over-dancer-container">
+                <div id="game-over-dancer">
+                    <div class="dancer-head"></div>
+                    <div class="dancer-hat"></div>
+                    <div class="dancer-body"></div>
+                    <div class="dancer-arm-left"></div>
+                    <div class="dancer-arm-right"></div>
+                    <div class="dancer-leg-left"></div>
+                    <div class="dancer-leg-right"></div>
+                </div>
+            </div>
+            
+            <p id="final-score">Score: 0</p>
+            <button id="restart-button">Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        // Add resize listener to handle orientation changes
+        window.addEventListener('resize', function() {
+            if (isMobileDevice()) {
+                mobileControls.style.display = 'flex';
+                gameContainer.style.height = 'calc(100vh - 80px)';
+            } else {
+                mobileControls.style.display = 'none';
+                gameContainer.style.height = '400px';
+            }
+        });
+        
+        // Game state
+        const gameState = {
+            isPlaying: false,
+            score: 0,
+            playerLane: 2,  // 0, 1, 2, 3, or 4 (middle lane by default)
+            lanes: [80, 140, 200, 260, 320], // 5 lanes evenly distributed
+            gameSpeed: 5,
+            spawnRate: 1500,  // Milliseconds between dancer spawns (half the frequency from before)
+            lastSpawnTime: 0,
+            lastTorpedoTime: 0, // Time of last torpedo spawn
+            torpedoSpawnRate: 6000, // Milliseconds between torpedo spawns (halved from before)
+            dancers: [],
+            torpedoes: [], // Array to store active torpedoes
+            explosions: [], // Array to store active explosions
+            animationId: null,
+            lastDanceStyle: "",
+            dancerNames: [
+                "Santiago", "Isabella", "Miguel", "Sophia", "Carlos", 
+                "Valentina", "Diego", "Gabriela", "Rafael", "Camila",
+                "Javier", "Valeria", "Eduardo", "Lucia", "Mateo",
+                "Regina", "Alejandro", "Natalia", "Manuel", "Carolina"
+            ],
+            danceStyles: ["Kalypso", "Tango", "Watusi"]
+        };
+
+        // Elements
+        const gameContainer = document.getElementById('game-container');
+        const player = document.getElementById('player');
+        const scoreElement = document.getElementById('score');
+        const startScreen = document.getElementById('start-screen');
+        const startButton = document.getElementById('start-button');
+        const gameOverScreen = document.getElementById('game-over');
+        const gameOverMessage = document.getElementById('game-over-message');
+        const restartButton = document.getElementById('restart-button');
+        const finalScoreElement = document.getElementById('final-score');
+        const dialogueBox = document.getElementById('dialogue-box');
+        const mobileControls = document.getElementById('mobile-controls');
+        const mobileUpButton = document.querySelector('.mobile-up');
+        const mobileDownButton = document.querySelector('.mobile-down');
+
+        // Detect if device is mobile
+        function isMobileDevice() {
+            return (window.innerWidth <= 800) || 
+                   ('ontouchstart' in window) || 
+                   (navigator.maxTouchPoints > 0) || 
+                   (navigator.msMaxTouchPoints > 0);
+        }
+        
+        // Show mobile controls if on mobile device
+        if (isMobileDevice()) {
+            mobileControls.style.display = 'flex';
+            
+            // Adjust game container to accommodate mobile controls
+            gameContainer.style.height = 'calc(100vh - 80px)';
+        }
+
+        // Set up event listeners
+        startButton.addEventListener('click', startGame);
+        restartButton.addEventListener('click', startGame);
+        document.addEventListener('keydown', handleKeyPress);
+        
+        // Add mobile control event listeners
+        mobileUpButton.addEventListener('touchstart', function(e) {
+            e.preventDefault(); // Prevent default touch behavior
+            if (gameState.isPlaying && gameState.playerLane > 0) {
+                gameState.playerLane--;
+                updatePlayerPosition();
+            }
+        });
+        
+        mobileDownButton.addEventListener('touchstart', function(e) {
+            e.preventDefault(); // Prevent default touch behavior
+            if (gameState.isPlaying && gameState.playerLane < 4) { // Changed from < 2 to < 4 for 5 lanes
+                gameState.playerLane++;
+                updatePlayerPosition();
+            }
+        });
+
+        // Handle player movement
+        function handleKeyPress(e) {
+            if (!gameState.isPlaying) return;
+            
+            if ((e.key === 'ArrowUp' || e.key === 'w') && gameState.playerLane > 0) {
+                gameState.playerLane--;
+                updatePlayerPosition();
+            }
+            else if ((e.key === 'ArrowDown' || e.key === 's') && gameState.playerLane < 4) { // Changed from < 2 to < 4 for 5 lanes
+                gameState.playerLane++;
+                updatePlayerPosition();
+            }
+        }
+
+        // Update player's position based on lane
+        function updatePlayerPosition() {
+            const laneY = gameState.lanes[gameState.playerLane];
+            player.style.top = (laneY - player.offsetHeight / 2) + 'px';
+        }
+
+        // Create a new dancer obstacle
+        function spawnDancer() {
+            const dancer = document.createElement('div');
+            dancer.className = 'dancer';
+            
+            // Create stick figure parts
+            const head = document.createElement('div');
+            head.className = 'dancer-head';
+            
+            const body = document.createElement('div');
+            body.className = 'dancer-body';
+            
+            const armLeft = document.createElement('div');
+            armLeft.className = 'dancer-arm-left';
+            
+            const armRight = document.createElement('div');
+            armRight.className = 'dancer-arm-right';
+            
+            const legLeft = document.createElement('div');
+            legLeft.className = 'dancer-leg-left';
+            
+            const legRight = document.createElement('div');
+            legRight.className = 'dancer-leg-right';
+            
+            // Add parts to dancer
+            dancer.appendChild(head);
+            dancer.appendChild(body);
+            dancer.appendChild(armLeft);
+            dancer.appendChild(armRight);
+            dancer.appendChild(legLeft);
+            dancer.appendChild(legRight);
+            
+            // Set initial dance pose
+            dancer.classList.add('dance-pose-1');
+            
+            // Randomly choose a lane
+            const lane = Math.floor(Math.random() * 5); // Changed from 3 to 5 lanes
+            const laneY = gameState.lanes[lane];
+            
+            dancer.style.top = (laneY - 25) + 'px';  // Center in lane
+            
+            // Random color for variety
+            const colors = ['#F06', '#6CF', '#FC0', '#0F6', '#C0F', '#F0F', '#0FF']; // Added more vibrant colors
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            // Apply color to all parts
+            head.style.backgroundColor = color;
+            body.style.backgroundColor = color;
+            armLeft.style.backgroundColor = color;
+            armRight.style.backgroundColor = color;
+            legLeft.style.backgroundColor = color;
+            legRight.style.backgroundColor = color;
+            
+            // Pick a random name and dance style
+            const dancerName = gameState.dancerNames[Math.floor(Math.random() * gameState.dancerNames.length)];
+            const danceStyle = gameState.danceStyles[Math.floor(Math.random() * gameState.danceStyles.length)];
+            
+            // Show varied and charismatic dialogue
+            const dialoguePhrases = [
+                `${dancerName} is getting down to the ${danceStyle}!`,
+                `Check out ${dancerName}'s amazing ${danceStyle} moves!`,
+                `${dancerName} is tearing up the floor with that ${danceStyle}!`,
+                `No one can ${danceStyle} like ${dancerName}!`,
+                `${dancerName} is bringing the heat with that ${danceStyle}!`,
+                `${dancerName}'s ${danceStyle} could win a dance competition!`,
+                `${dancerName} was born to ${danceStyle}!`,
+                `Is that ${dancerName} with the killer ${danceStyle}?`,
+                `${dancerName} makes the ${danceStyle} look easy!`,
+                `${dancerName} is dropping some serious ${danceStyle} vibes!`
+            ];
+            const randomPhrase = dialoguePhrases[Math.floor(Math.random() * dialoguePhrases.length)];
+            dialogueBox.textContent = randomPhrase;
+            dialogueBox.style.opacity = "1"; // Make sure dialogue is visible
+            
+            gameContainer.appendChild(dancer);
+            
+            // Add to game state
+            gameState.dancers.push({
+                element: dancer,
+                lane: lane,
+                x: gameContainer.offsetWidth,
+                lastPoseChange: performance.now(),
+                dancePose: 1,
+                name: dancerName,
+                danceStyle: danceStyle
+            });
+        }
+
+        // Move all dancers and check for collisions
+        function updateDancers() {
+            const currentTime = performance.now();
+            
+            for (let i = gameState.dancers.length - 1; i >= 0; i--) {
+                const dancer = gameState.dancers[i];
+                
+                // Move dancer
+                dancer.x -= gameState.gameSpeed;
+                dancer.element.style.left = dancer.x + 'px';
+                
+                // Update dance pose (every 300ms)
+                if (currentTime - dancer.lastPoseChange > 300) {
+                    dancer.dancePose = dancer.dancePose === 1 ? 2 : 1;
+                    dancer.element.classList.remove('dance-pose-1', 'dance-pose-2');
+                    dancer.element.classList.add(`dance-pose-${dancer.dancePose}`);
+                    dancer.lastPoseChange = currentTime;
+                }
+                
+                // Check if off-screen
+                if (dancer.x < -50) {
+                    gameContainer.removeChild(dancer.element);
+                    gameState.dancers.splice(i, 1);
+                    continue;
+                }
+                
+                // Check for collision
+                if (dancer.lane === gameState.playerLane && 
+                    dancer.x > 80 && dancer.x < 130) {
+                    // Update dialogue box before game over
+                    dialogueBox.textContent = `${dancer.name} caught you with the ${dancer.danceStyle}!`;
+                    
+                    gameOver();
+                    return;
+                }
+            }
+        }
+
+        // Create a Libido Torpedo
+        function spawnTorpedo() {
+            const torpedo = document.createElement('div');
+            torpedo.className = 'libido-torpedo';
+            
+            // Create torpedo parts
+            const body = document.createElement('div');
+            body.className = 'torpedo-body';
+            body.textContent = 'LIBIDO';
+            body.style.color = "#FF69B4"; // Pink text
+            
+            const nose = document.createElement('div');
+            nose.className = 'torpedo-nose';
+            
+            const tail = document.createElement('div');
+            tail.className = 'torpedo-tail';
+            
+            const finTop = document.createElement('div');
+            finTop.className = 'torpedo-fin-top';
+            
+            const finBottom = document.createElement('div');
+            finBottom.className = 'torpedo-fin-bottom';
+            
+            // Add parts to torpedo
+            torpedo.appendChild(nose);
+            torpedo.appendChild(body);
+            torpedo.appendChild(tail);
+            torpedo.appendChild(finTop);
+            torpedo.appendChild(finBottom);
+            
+            // Always spawn from right side of screen
+            const gameWidth = gameContainer.offsetWidth;
+            const gameHeight = gameContainer.offsetHeight;
+            
+            // Initial position
+            const x = gameWidth + 20;
+            // Random y position
+            const y = Math.random() * (gameHeight - 50) + 25;
+            
+            // Set position (no rotation - torpedo always faces left)
+            torpedo.style.left = x + 'px';
+            torpedo.style.top = y + 'px';
+            
+            // Determine player position for path planning
+            const playerX = 100; // Center of player
+            const playerY = gameState.lanes[gameState.playerLane]; // Player's current lane
+            
+            // Calculate distance to player
+            const dx = playerX - x;
+            const dy = playerY - y;
+            
+            // Create a control point for the curve that will make the torpedo miss the player narrowly
+            // The control point will be placed to ensure the torpedo doesn't hit the player directly
+            const missDistance = Math.random() > 0.5 ? 40 : -40; // Random miss above or below player
+            
+            // Target point will be just to the left of the player, but slightly above or below
+            const targetX = playerX - 50; // To the left of player
+            const targetY = playerY + missDistance; // Above or below player
+            
+            // Control point for the curve (creates a nice arc)
+            const controlX = (x + targetX) / 2;
+            const controlY = y + (Math.random() * 100 - 50); // Random curve
+            
+            // Add to game container
+            gameContainer.appendChild(torpedo);
+            
+            // Add to game state
+            gameState.torpedoes.push({
+                element: torpedo,
+                x: x,
+                y: y,
+                speed: 0.75 + Math.random() * 0.5, // One quarter of previous speed (was 3-5, now 0.75-1.25)
+                startX: x,
+                startY: y,
+                controlX: controlX,
+                controlY: controlY,
+                targetX: targetX,
+                targetY: targetY,
+                progress: 0 // Progress along curve from 0 to 1
+            });
+        }
+        
+        // Move torpedoes and check for collisions
+        function updateTorpedoes() {
+            for (let i = gameState.torpedoes.length - 1; i >= 0; i--) {
+                const torpedo = gameState.torpedoes[i];
+                
+                // Move torpedo along bezier curve with shark-like movement
+                torpedo.progress += torpedo.speed / 200; // Adjust speed to make movement reasonable
+                
+                // Add subtle side-to-side movement like a shark
+                const swimFactor = Math.sin(torpedo.progress * 8) * 5; // Reduced amplitude of side-to-side motion
+                
+                if (torpedo.progress >= 1) {
+                    // If path is complete, continue in straight line to the left
+                    torpedo.x -= torpedo.speed;
+                    torpedo.y += swimFactor * 0.5; // Subtle vertical movement
+                } else {
+                    // Calculate position along bezier curve: P = (1-t)^2*P0 + 2(1-t)t*P1 + t^2*P2
+                    const t = torpedo.progress;
+                    const mt = 1 - t;
+                    
+                    // Base position on curve
+                    const baseX = mt*mt*torpedo.startX + 2*mt*t*torpedo.controlX + t*t*torpedo.targetX;
+                    const baseY = mt*mt*torpedo.startY + 2*mt*t*torpedo.controlY + t*t*torpedo.targetY;
+                    
+                    // Apply subtle vertical movement only
+                    torpedo.x = baseX;
+                    torpedo.y = baseY + swimFactor;
+                }
+                
+                // Update torpedo position (no rotation - always faces left)
+                torpedo.element.style.left = torpedo.x + 'px';
+                torpedo.element.style.top = torpedo.y + 'px';
+                
+                // Update torpedo position
+                torpedo.element.style.left = torpedo.x + 'px';
+                torpedo.element.style.top = torpedo.y + 'px';
+                
+                // Update torpedo position (no rotation - always faces left)
+                torpedo.element.style.left = torpedo.x + 'px';
+                torpedo.element.style.top = torpedo.y + 'px';
+                
+                // Check if out of bounds (hit an edge)
+                if (torpedo.x < -50 || torpedo.x > gameContainer.offsetWidth + 50 ||
+                    torpedo.y < -50 || torpedo.y > gameContainer.offsetHeight + 50) {
+                    // Create explosion
+                    createExplosion(torpedo.x, torpedo.y);
+                    
+                    // Remove torpedo
+                    gameContainer.removeChild(torpedo.element);
+                    gameState.torpedoes.splice(i, 1);
+                    continue;
+                }
+                
+                // Check for collision with player
+                const playerRect = player.getBoundingClientRect();
+                const torpedoRect = torpedo.element.getBoundingClientRect();
+                
+                if (!(torpedoRect.right < playerRect.left || 
+                      torpedoRect.left > playerRect.right || 
+                      torpedoRect.bottom < playerRect.top || 
+                      torpedoRect.top > playerRect.bottom)) {
+                    // Create explosion at impact
+                    createExplosion(torpedo.x, torpedo.y);
+                    
+                    // Remove torpedo
+                    gameContainer.removeChild(torpedo.element);
+                    gameState.torpedoes.splice(i, 1);
+                    
+                    // End game
+                    dialogueBox.textContent = "Your libido was too strong to resist!";
+                    gameOver();
+                    return;
+                }
+            }
+        }
+        
+        // Create explosion effect
+        function createExplosion(x, y) {
+            const explosion = document.createElement('div');
+            explosion.className = 'explosion';
+            explosion.style.left = (x - 30) + 'px'; // Center explosion
+            explosion.style.top = (y - 30) + 'px';
+            
+            gameContainer.appendChild(explosion);
+            
+            // Remove explosion after animation completes
+            setTimeout(() => {
+                if (explosion.parentNode === gameContainer) {
+                    gameContainer.removeChild(explosion);
+                }
+            }, 500); // Match the animation duration
+        }
+        
+        // Update explosions
+        function updateExplosions() {
+            for (let i = gameState.explosions.length - 1; i >= 0; i--) {
+                const explosion = gameState.explosions[i];
+                explosion.time += 16; // Assuming 60fps (16ms per frame)
+                
+                if (explosion.time >= 500) { // Animation duration
+                    if (explosion.element.parentNode === gameContainer) {
+                        gameContainer.removeChild(explosion.element);
+                    }
+                    gameState.explosions.splice(i, 1);
+                }
+            }
+        }
+        
+        // Main game loop
+        function gameLoop(timestamp) {
+            if (!gameState.isPlaying) return;
+            
+            // Update score
+            gameState.score++;
+            scoreElement.textContent = 'Score: ' + gameState.score;
+            
+            // Increase game speed over time (max speed of 12)
+            gameState.gameSpeed = Math.min(12, 5 + Math.floor(gameState.score / 500) * 0.5);
+            
+            // Spawn dancers
+            if (timestamp - gameState.lastSpawnTime > gameState.spawnRate) {
+                // Hide dialogue box for previous dancer (if any)
+                if (gameState.dancers.length > 0) {
+                    // Move dialogue box down after 2 seconds
+                    setTimeout(() => {
+                        dialogueBox.style.opacity = "0.5";
+                    }, 2000);
+                }
+                
+                spawnDancer();
+                gameState.lastSpawnTime = timestamp;
+                
+                // Decrease spawn rate over time (min 700ms)
+                gameState.spawnRate = Math.max(700, 1500 - Math.floor(gameState.score / 300) * 50);
+            }
+            
+            // Spawn torpedoes
+            if (timestamp - gameState.lastTorpedoTime > gameState.torpedoSpawnRate) {
+                spawnTorpedo();
+                gameState.lastTorpedoTime = timestamp;
+                
+                // Decrease torpedo spawn rate over time (min 3000ms)
+                gameState.torpedoSpawnRate = Math.max(3000, 6000 - Math.floor(gameState.score / 1000) * 300);
+            }
+            
+            // Update dancers
+            updateDancers();
+            
+            // Update torpedoes
+            updateTorpedoes();
+            
+            // Update explosions
+            updateExplosions();
+            
+            // Continue game loop
+            gameState.animationId = requestAnimationFrame(gameLoop);
+        }
+
+        // Start the game
+        function startGame() {
+            // Clear any existing dancers
+            gameState.dancers.forEach(dancer => {
+                if (dancer.element.parentNode === gameContainer) {
+                    gameContainer.removeChild(dancer.element);
+                }
+            });
+            
+            // Clear any existing torpedoes
+            gameState.torpedoes.forEach(torpedo => {
+                if (torpedo.element.parentNode === gameContainer) {
+                    gameContainer.removeChild(torpedo.element);
+                }
+            });
+            
+            // Remove any explosions
+            const explosions = document.querySelectorAll('.explosion');
+            explosions.forEach(explosion => {
+                if (explosion.parentNode === gameContainer) {
+                    gameContainer.removeChild(explosion);
+                }
+            });
+            
+            // Reset game state
+            gameState.isPlaying = true;
+            gameState.score = 0;
+            gameState.playerLane = 2; // Start in middle lane (of 5)
+            gameState.dancers = [];
+            gameState.torpedoes = [];
+            gameState.explosions = [];
+            gameState.gameSpeed = 5;
+            gameState.spawnRate = 1500;
+            gameState.torpedoSpawnRate = 6000;
+            
+            // Reset dialogue box
+            dialogueBox.textContent = 'Try to leave Klub Romance without losing your cool';
+            dialogueBox.style.opacity = "1";
+            
+            // Update UI
+            updatePlayerPosition();
+            scoreElement.textContent = 'Score: 0';
+            startScreen.style.display = 'none';
+            gameOverScreen.style.display = 'none';
+            
+            // Start game loop
+            gameState.lastSpawnTime = performance.now();
+            gameState.lastTorpedoTime = performance.now();
+            gameState.animationId = requestAnimationFrame(gameLoop);
+        }
+
+        // Game over
+        function gameOver() {
+            gameState.isPlaying = false;
+            cancelAnimationFrame(gameState.animationId);
+            
+            // Find which dancer caught the player
+            const collidingDancer = gameState.dancers.find(dancer => 
+                dancer.lane === gameState.playerLane && 
+                dancer.x > 80 && dancer.x < 130
+            );
+            
+            // Update game over message with the dance style
+            if (collidingDancer) {
+                gameState.lastDanceStyle = collidingDancer.danceStyle;
+                gameOverMessage.textContent = `You find yourself dancing the ${collidingDancer.danceStyle}!`;
+            } else {
+                gameOverMessage.textContent = 'You got dragged into dancing!';
+            }
+            
+            finalScoreElement.textContent = 'Score: ' + gameState.score;
+            gameOverScreen.style.display = 'flex';
+        }
+    </script>
+</body>
+</html>
