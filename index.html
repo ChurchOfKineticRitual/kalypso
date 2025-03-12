@@ -48,13 +48,13 @@
         
         #player {
             position: absolute;
-            width: 20px;
-            height: 40px;
+            width: 32px;
+            height: 48px;
             left: 100px;
-            top: 180px;
-            background-color: #000;
+            background: url('images/klark.png') no-repeat;
+            background-size: contain;
             z-index: 10;
-            box-shadow: 0 0 10px #fff, 0 0 20px #00ffff; /* Glow effect for better visibility */
+            animation: bobUpDown 1s infinite ease-in-out;
         }
         
         /* Style for the hat */
@@ -496,7 +496,43 @@
             right: 20px; /* Flipped: was left: 20px */
             bottom: 0;
         }
-        
+        /* Sprite-based character styles */
+#player {
+    position: absolute;
+    width: 32px;
+    height: 48px;
+    left: 100px;
+    background: url('images/klark.png') no-repeat;
+    z-index: 10;
+    animation: bobUpDown 1s infinite ease-in-out;
+}
+
+@keyframes bobUpDown {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-3px); }
+}
+
+.dancer {
+    position: absolute;
+    width: 32px;
+    height: 48px;
+    right: -50px;
+    z-index: 5;
+}
+
+.dancer-sprite {
+    width: 100%;
+    height: 100%;
+    transform-origin: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+/* Remove old dancer body parts styles as they're no longer needed */
+.dancer-body, .dancer-head, .dancer-arm-left, .dancer-arm-right, 
+.dancer-leg-left, .dancer-leg-right {
+    display: none;
+}
+
         /* Explosion animation */
         .explosion {
             position: absolute;
@@ -546,8 +582,8 @@
         
         <div id="start-screen">
             <h1>Too Kool To Kalypso</h1>
-            <p>Try to leave Klub Romance without losing your cool.<br>Use Arrow Keys or W/S to move.</p>
-            <button id="start-button">Start Dancing</button>
+            <p>Try to leave Klub Romance without losing your cool.<br>Use Arrow Keys to move.</p>
+            <button id="start-button">Let's get out of here</button>
         </div>
         
         <div id="game-over">
@@ -606,6 +642,9 @@
                 "Regina", "Alejandro", "Natalia", "Manuel", "Carolina"
             ],
             danceStyles: ["Kalypso", "Tango", "Watusi"]
+            playerX: 100,  //  initial X position
+            minX: 50,      // leftmost position
+            maxX: 700,     // rightmost position
         };
 
         // Elements
@@ -665,13 +704,35 @@
         function handleKeyPress(e) {
             if (!gameState.isPlaying) return;
             
-            if ((e.key === 'ArrowUp' || e.key === 'w') && gameState.playerLane > 0) {
-                gameState.playerLane--;
-                updatePlayerPosition();
-            }
-            else if ((e.key === 'ArrowDown' || e.key === 's') && gameState.playerLane < 4) { // Changed from < 2 to < 4 for 5 lanes
-                gameState.playerLane++;
-                updatePlayerPosition();
+            switch(e.key) {
+                case 'ArrowUp':
+                case 'w':
+                    if (gameState.playerLane > 0) {
+                        gameState.playerLane--;
+                        updatePlayerPosition();
+                    }
+                    break;
+                case 'ArrowDown':
+                case 's':
+                    if (gameState.playerLane < 4) {
+                        gameState.playerLane++;
+                        updatePlayerPosition();
+                    }
+                    break;
+                case 'ArrowLeft':
+                case 'a':
+                    if (gameState.playerX > gameState.minX) {
+                        gameState.playerX -= 10;
+                        updatePlayerPosition();
+                    }
+                    break;
+                case 'ArrowRight':
+                case 'd':
+                    if (gameState.playerX < gameState.maxX) {
+                        gameState.playerX += 10;
+                        updatePlayerPosition();
+                    }
+                    break;
             }
         }
 
@@ -679,95 +740,67 @@
         function updatePlayerPosition() {
             const laneY = gameState.lanes[gameState.playerLane];
             player.style.top = (laneY - player.offsetHeight / 2) + 'px';
+            player.style.left = gameState.playerX + 'px';
         }
 
         // Create a new dancer obstacle
-        function spawnDancer() {
-            const dancer = document.createElement('div');
-            dancer.className = 'dancer';
-            
-            // Create stick figure parts
-            const head = document.createElement('div');
-            head.className = 'dancer-head';
-            
-            const body = document.createElement('div');
-            body.className = 'dancer-body';
-            
-            const armLeft = document.createElement('div');
-            armLeft.className = 'dancer-arm-left';
-            
-            const armRight = document.createElement('div');
-            armRight.className = 'dancer-arm-right';
-            
-            const legLeft = document.createElement('div');
-            legLeft.className = 'dancer-leg-left';
-            
-            const legRight = document.createElement('div');
-            legRight.className = 'dancer-leg-right';
-            
-            // Add parts to dancer
-            dancer.appendChild(head);
-            dancer.appendChild(body);
-            dancer.appendChild(armLeft);
-            dancer.appendChild(armRight);
-            dancer.appendChild(legLeft);
-            dancer.appendChild(legRight);
-            
-            // Set initial dance pose
-            dancer.classList.add('dance-pose-1');
-            
-            // Randomly choose a lane
-            const lane = Math.floor(Math.random() * 5); // Changed from 3 to 5 lanes
-            const laneY = gameState.lanes[lane];
-            
-            dancer.style.top = (laneY - 25) + 'px';  // Center in lane
-            
-            // Random color for variety
-            const colors = ['#F06', '#6CF', '#FC0', '#0F6', '#C0F', '#F0F', '#0FF']; // Added more vibrant colors
-            const color = colors[Math.floor(Math.random() * colors.length)];
-            
-            // Apply color to all parts
-            head.style.backgroundColor = color;
-            body.style.backgroundColor = color;
-            armLeft.style.backgroundColor = color;
-            armRight.style.backgroundColor = color;
-            legLeft.style.backgroundColor = color;
-            legRight.style.backgroundColor = color;
-            
-            // Pick a random name and dance style
-            const dancerName = gameState.dancerNames[Math.floor(Math.random() * gameState.dancerNames.length)];
-            const danceStyle = gameState.danceStyles[Math.floor(Math.random() * gameState.danceStyles.length)];
-            
-            // Show varied and charismatic dialogue
-            const dialoguePhrases = [
-                `${dancerName} is getting down to the ${danceStyle}!`,
-                `Check out ${dancerName}'s amazing ${danceStyle} moves!`,
-                `${dancerName} is tearing up the floor with that ${danceStyle}!`,
-                `No one can ${danceStyle} like ${dancerName}!`,
-                `${dancerName} is bringing the heat with that ${danceStyle}!`,
-                `${dancerName}'s ${danceStyle} could win a dance competition!`,
-                `${dancerName} was born to ${danceStyle}!`,
-                `Is that ${dancerName} with the killer ${danceStyle}?`,
-                `${dancerName} makes the ${danceStyle} look easy!`,
-                `${dancerName} is dropping some serious ${danceStyle} vibes!`
-            ];
-            const randomPhrase = dialoguePhrases[Math.floor(Math.random() * dialoguePhrases.length)];
-            dialogueBox.textContent = randomPhrase;
-            dialogueBox.style.opacity = "1"; // Make sure dialogue is visible
-            
-            gameContainer.appendChild(dancer);
-            
-            // Add to game state
-            gameState.dancers.push({
-                element: dancer,
-                lane: lane,
-                x: gameContainer.offsetWidth,
-                lastPoseChange: performance.now(),
-                dancePose: 1,
-                name: dancerName,
-                danceStyle: danceStyle
-            });
-        }
+    
+    function spawnDancer() {
+        const dancer = document.createElement('div');
+        dancer.className = 'dancer';
+        
+        // Create sprite element
+        const sprite = document.createElement('img');
+        sprite.className = 'dancer-sprite';
+        
+        // Randomly select one of the 7 dancer sprites
+        const dancerNumber = Math.floor(Math.random() * 7) + 1;
+        sprite.src = `images/dancer_${dancerNumber}.png`;
+        
+        dancer.appendChild(sprite);
+        
+        // Randomly choose a lane
+        const lane = Math.floor(Math.random() * 5);
+        const laneY = gameState.lanes[lane];
+        
+        dancer.style.top = (laneY - 24) + 'px';  // Center in lane (48px height / 2 = 24)
+        
+        // Pick a random name and dance style
+        const dancerName = gameState.dancerNames[Math.floor(Math.random() * gameState.dancerNames.length)];
+        const danceStyle = gameState.danceStyles[Math.floor(Math.random() * gameState.danceStyles.length)];
+        
+        // Show varied and charismatic dialogue
+        const dialoguePhrases = [
+            `${dancerName} is getting down to the ${danceStyle}!`,
+            `Check out ${dancerName}'s amazing ${danceStyle} moves!`,
+            `${dancerName} is tearing up the floor with that ${danceStyle}!`,
+            `No one can ${danceStyle} like ${dancerName}!`,
+            `${dancerName} is bringing the heat with that ${danceStyle}!`,
+            `${dancerName}'s ${danceStyle} could win a dance competition!`,
+            `${dancerName} was born to ${danceStyle}!`,
+            `Is that ${dancerName} with the killer ${danceStyle}?`,
+            `${dancerName} makes the ${danceStyle} look easy!`,
+            `${dancerName} is dropping some serious ${danceStyle} vibes!`
+        ];
+        const randomPhrase = dialoguePhrases[Math.floor(Math.random() * dialoguePhrases.length)];
+        dialogueBox.textContent = randomPhrase;
+        dialogueBox.style.opacity = "1";
+        
+        gameContainer.appendChild(dancer);
+        
+        // Add to game state with new sprite-specific properties
+        gameState.dancers.push({
+            element: dancer,
+            sprite: sprite,
+            lane: lane,
+            x: gameContainer.offsetWidth,
+            lastFlipTime: performance.now(),
+            isFlipped: false,
+            flipInterval: 500 + Math.random() * 300, // Random flip interval between 500-800ms
+            name: dancerName,
+            danceStyle: danceStyle
+        });
+    }
 
         // Move all dancers and check for collisions
         function updateDancers() {
@@ -780,12 +813,13 @@
                 dancer.x -= gameState.gameSpeed;
                 dancer.element.style.left = dancer.x + 'px';
                 
-                // Update dance pose (every 300ms)
-                if (currentTime - dancer.lastPoseChange > 300) {
-                    dancer.dancePose = dancer.dancePose === 1 ? 2 : 1;
-                    dancer.element.classList.remove('dance-pose-1', 'dance-pose-2');
-                    dancer.element.classList.add(`dance-pose-${dancer.dancePose}`);
-                    dancer.lastPoseChange = currentTime;
+                // Handle sprite flipping with randomized timing
+                if (currentTime - dancer.lastFlipTime > dancer.flipInterval) {
+                    dancer.isFlipped = !dancer.isFlipped;
+                    dancer.sprite.style.transform = dancer.isFlipped ? 'scaleX(-1)' : 'scaleX(1)';
+                    dancer.lastFlipTime = currentTime;
+                    // Randomize next flip interval
+                    dancer.flipInterval = 500 + Math.random() * 300;
                 }
                 
                 // Check if off-screen
@@ -800,7 +834,6 @@
                     dancer.x > 80 && dancer.x < 130) {
                     // Update dialogue box before game over
                     dialogueBox.textContent = `${dancer.name} caught you with the ${dancer.danceStyle}!`;
-                    
                     gameOver();
                     return;
                 }
