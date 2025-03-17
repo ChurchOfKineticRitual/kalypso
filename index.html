@@ -20,7 +20,7 @@
         #game-container {
             position: relative;
             width: 800px;
-            height: 400px;
+            height: 520px;
             background-color: #330044; /* Deeper purple for more disco vibes */
             overflow: hidden;
             border: 3px solid #8800aa;
@@ -85,115 +85,9 @@
             transition: opacity 0.3s ease;
         }
         
-        #game-over-dancer-container {
-            position: relative;
-            width: 100px;
-            height: 120px;
-            background-color: #F06;
-            border-radius: 10px;
-            margin: 20px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 0 20px #ff00ff; /* Add glow to dancer container */
-        }
-        
-        #game-over-dancer {
-            position: relative;
-            width: 50px;
-            height: 100px;
-            display: inline-block;
-        }
-        
-        #game-over-dancer .dancer-head {
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            background-color: #000;
-            border-radius: 50%;
-            left: 15px;
-            top: 0;
-        }
-        
-        #game-over-dancer .dancer-body {
-            position: absolute;
-            width: 6px;
-            height: 30px;
-            background-color: #000;
-            left: 22px;
-            top: 20px;
-        }
-        
-        #game-over-dancer .dancer-hat {
-            position: absolute;
-            width: 24px;
-            height: 6px;
-            background-color: #0F0;
-            left: 13px;
-            top: -6px;
-        }
-        
-        #game-over-dancer .dancer-arm-left,
-        #game-over-dancer .dancer-arm-right {
-            position: absolute;
-            width: 20px;
-            height: 4px;
-            background-color: #000;
-            top: 25px;
-        }
-        
-        #game-over-dancer .dancer-arm-left {
-            left: 2px;
-            transform-origin: right center;
-            animation: dance-arm-left 0.6s infinite alternate;
-        }
-        
-        #game-over-dancer .dancer-arm-right {
-            left: 28px;
-            transform-origin: left center;
-            animation: dance-arm-right 0.6s infinite alternate;
-        }
-        
-        #game-over-dancer .dancer-leg-left,
-        #game-over-dancer .dancer-leg-right {
-            position: absolute;
-            width: 6px;
-            height: 40px;
-            background-color: #000;
-            top: 50px;
-        }
-        
-        #game-over-dancer .dancer-leg-left {
-            left: 15px;
-            transform-origin: top center;
-            animation: dance-leg-left 0.6s infinite alternate;
-        }
-        
-        #game-over-dancer .dancer-leg-right {
-            left: 29px;
-            transform-origin: top center;
-            animation: dance-leg-right 0.6s infinite alternate;
-        }
-        
-        /* Dance animations for game over */
-        @keyframes dance-arm-left {
-            0% { transform: rotate(-20deg); }
-            100% { transform: rotate(60deg); }
-        }
-        
-        @keyframes dance-arm-right {
-            0% { transform: rotate(20deg); }
-            100% { transform: rotate(-60deg); }
-        }
-        
-        @keyframes dance-leg-left {
-            0% { transform: rotate(-10deg); }
-            100% { transform: rotate(30deg); }
-        }
-        
-        @keyframes dance-leg-right {
-            0% { transform: rotate(10deg); }
-            100% { transform: rotate(-30deg); }
+        #game-over-dancer-gif {
+            max-width: 100%;
+            max-height: 100%;
         }
         
         #score {
@@ -204,39 +98,6 @@
             font-size: 20px;
             z-index: 20;
             text-shadow: 0 0 5px #ff00ff; /* Add neon glow to score */
-        }
-        
-        #game-over {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(68, 0, 102, 0.8);
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            z-index: 50;
-            display: none;
-            text-shadow: 0 0 10px #ff00ff; /* Add neon glow to game over text */
-        }
-        
-        #game-over h2 {
-            font-size: 36px;
-            margin-bottom: 20px;
-        }
-        
-        #game-over button {
-            padding: 10px 20px;
-            font-size: 18px;
-            cursor: pointer;
-            background-color: #F06;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            box-shadow: 0 0 15px #ff00ff; /* Add glow to button */
         }
         
         #start-screen {
@@ -441,12 +302,6 @@
 
 
 
-/* Remove old dancer body parts styles as they're no longer needed */
-.dancer-body, .dancer-head, .dancer-arm-left, .dancer-arm-right, 
-.dancer-leg-left, .dancer-leg-right {
-    display: none;
-}
-
         /* Explosion animation */
         .explosion {
             position: absolute;
@@ -467,22 +322,157 @@
     70% { transform: scale(1.5); opacity: 0.8; }
     100% { transform: scale(2); opacity: 0; }
 }
+        /* New Game Over Screen Styles */
+        .game-over-container {
+            display: grid;
+            grid-template-areas:
+                "title title"
+                "message message"
+                "content content" 
+                "button button";
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            background: rgba(68, 0, 102, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+        }
+
+
+        .content-wrapper {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 25px;
+            margin: 0 auto;
+            grid-area: content;
+            width: 90%;
+        }
+
+
+        #game-over {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(34, 0, 51, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            z-index: 50;
+            display: none;
+            text-shadow: 0 0 10px #ff00ff;
+        }
+
+        #game-over-dancer-container {
+            position: relative;
+            width: 200px; /* Slightly smaller */
+            height: 200px; /* Slightly smaller to maintain aspect ratio */
+            background-color: rgb(0, 255, 68);
+            border-radius: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 20px #ff00ff;
+            overflow: hidden;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+
+
+        .score-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            width: auto; /* Let it take natural width */
+            font-size: 18px;
+            color: white;
+            justify-content: center;
+            flex-shrink: 0; /* Prevent shrinking */
+        }
+
+
+        .score-row {
+            display: flex;
+            justify-content: flex-start;
+            padding: 8px 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            text-shadow: 0 0 8px #ff00ff;
+        }
+
+        .score-row span {
+            margin-left: auto;
+            padding-right: 10px;
+        }
+
+
+        #restart-button {
+            padding: 12px 25px;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: #F06;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 0 15px #ff00ff;
+            transition: all 0.2s;
+            grid-area: button;
+            justify-self: center;
+            margin-top: 10px;
+        }
+
+        #game-over-message {
+            grid-area: message;
+            margin: 0;
+        }
+
+        .game-over-container h2 {
+            grid-area: title;
+            margin: 0 0 10px 0;
+            font-size: 32px;
+        }
+
     </style>
 </head>
 <body>
     <div id="game-container">
+        <!-- Audio elements -->
+        <audio id="game-music" preload="auto" loop>
+            <source src="audio/processed/kalypso_GameMusic.webm" type="audio/webm">
+            <source src="audio/processed/kalypso_GameMusic.m4a" type="audio/mp4">
+            <source src="audio/source/kalypso_GameMusic.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="explosion-sound" preload="auto">
+            <source src="audio/processed/kalypso_Boom.webm" type="audio/webm">
+            <source src="audio/processed/kalypso_Boom.m4a" type="audio/mp4">
+            <source src="audio/source/kalypso_Boom.mp3" type="audio/mpeg">
+        </audio>
+        <audio id="game-over-sound" preload="auto">
+            <source src="audio/processed/kalypso_GameOver.webm" type="audio/webm">
+            <source src="audio/processed/kalypso_GameOver.m4a" type="audio/mp4">
+            <source src="audio/source/kalypso_GameOver.mp3" type="audio/mpeg">
+        </audio>
+
         <div id="dance-floor"></div>
         <div id="player"></div>
         <div id="score">Score: 0</div>
         <!-- Add the dialogue box to the initial HTML -->
         <div id="dialogue-box" style="display: none;">Try to leave Klub Romance without losing your cool</div>
         
-        <!-- Lane markers - now 5 lanes -->
-        <div class="lane" style="top: 80px;"></div>
-        <div class="lane" style="top: 140px;"></div>
+        <!-- Lane markers - now 5 lanes with extra at top -->
         <div class="lane" style="top: 200px;"></div>
         <div class="lane" style="top: 260px;"></div>
         <div class="lane" style="top: 320px;"></div>
+        <div class="lane" style="top: 380px;"></div>
+        <div class="lane" style="top: 440px;"></div>
+
+
+        <button id="mute-button" style="position: absolute; top: 10px; right: 10px; z-index: 100; background-color: rgba(68, 0, 102, 0.7); color: white; border: none; padding: 5px 10px; cursor: pointer; border-radius: 5px;">🔊</button>
         
         <!-- Mobile controls - hidden by default -->
         <div id="mobile-controls" class="mobile-controls">
@@ -501,24 +491,28 @@
         </div>
         
         <div id="game-over">
-            <h2>Game Over</h2>
-            <p id="game-over-message">You find yourself dancing the Kalypso!</p>
-            
-            <div id="game-over-dancer-container">
-                <div id="game-over-dancer">
-                    <div class="dancer-head"></div>
-                    <div class="dancer-hat"></div>
-                    <div class="dancer-body"></div>
-                    <div class="dancer-arm-left"></div>
-                    <div class="dancer-arm-right"></div>
-                    <div class="dancer-leg-left"></div>
-                    <div class="dancer-leg-right"></div>
+            <div class="game-over-container">
+                <h2>Game Over</h2>
+                <p id="game-over-message">You find yourself dancing the Kalypso!</p>
+                
+                <div class="content-wrapper">
+                    <div id="game-over-dancer-container">
+                        <img id="game-over-dancer-gif" src="images/game-over-dance.gif" alt="Dancing figure">
+                    </div>
+                    
+                    <div class="score-container">
+                        <div class="score-row">YOUR SCORE: <span id="final-score">0</span></div>
+                        <div class="score-row">HIGH SCORE: <span id="high-score">0</span></div>
+                    </div>
                 </div>
+                
+                <button id="restart-button">Try Again</button>
             </div>
             
-            <p id="final-score">Score: 0</p>
-            <button id="restart-button">Try Again</button>
         </div>
+        
+        
+        
     </div>
 
     <script>
@@ -529,16 +523,17 @@
                 gameContainer.style.height = 'calc(100vh - 80px)';
             } else {
                 mobileControls.style.display = 'none';
-                gameContainer.style.height = '400px';
+                gameContainer.style.height = '520px'; // Updated height
             }
         });
+
         
         // Game state
         const gameState = {
             isPlaying: false,
             score: 0,
             playerLane: 2,  // 0, 1, 2, 3, or 4 (middle lane by default)
-            lanes: [80, 140, 200, 260, 320], // 5 lanes evenly distributed
+            lanes: [200, 260, 320, 380, 440], // 5 lanes evenly distributed with more space at top
             gameSpeed: 5,
             spawnRate: 1500,  // Milliseconds between dancer spawns (half the frequency from before)
             lastSpawnTime: 0,
@@ -583,10 +578,33 @@
         const gameOverMessage = document.getElementById('game-over-message');
         const restartButton = document.getElementById('restart-button');
         const finalScoreElement = document.getElementById('final-score');
+        const highScoreElement = document.getElementById('high-score');
         const dialogueBox = document.getElementById('dialogue-box');
         const mobileControls = document.getElementById('mobile-controls');
         const mobileUpButton = document.querySelector('.mobile-up');
         const mobileDownButton = document.querySelector('.mobile-down');
+
+        // Audio elements
+        const gameMusic = document.getElementById('game-music');
+        const explosionSound = document.getElementById('explosion-sound');
+        const gameOverSound = document.getElementById('game-over-sound');
+        gameMusic.volume = 0.7; // Adjust volume as needed
+        explosionSound.volume = 0.8;
+        gameOverSound.volume = 0.8;
+
+        // Function to play the explosion sound
+        function playExplosionSound() {
+            // Clone the sound to allow multiple explosions at once
+            const explosionSoundClone = explosionSound.cloneNode(true);
+            explosionSoundClone.volume = explosionSound.volume;
+            explosionSoundClone.play();
+            
+            // Remove the clone after it's done playing
+            explosionSoundClone.onended = function() {
+                this.remove();
+            };
+        }
+
 
         // Detect if device is mobile
         function isMobileDevice() {
@@ -662,6 +680,23 @@
             }
         }
 
+        // Mute button functionality
+        const muteButton = document.getElementById('mute-button');
+        let isMuted = false;
+
+        muteButton.addEventListener('click', function() {
+            isMuted = !isMuted;
+            
+            // Update all audio elements
+            gameMusic.muted = isMuted;
+            explosionSound.muted = isMuted;
+            gameOverSound.muted = isMuted;
+            
+            // Update button text
+            muteButton.textContent = isMuted ? '🔇' : '🔊';
+        });
+
+        
         // Update player's position based on lane
         function updatePlayerPosition() {
             const laneY = gameState.lanes[gameState.playerLane];
@@ -944,6 +979,9 @@
             explosion.style.left = (x - explosionSize/2) + 'px'; // Center explosion
             explosion.style.top = (y - explosionSize/2) + 'px';
             
+            // Play explosion sound
+            playExplosionSound();
+
             // Add debugging text to make sure explosion is created
             console.log("Creating explosion at", x, y);
             
@@ -1023,6 +1061,20 @@
 
         // Start the game
         function startGame() {
+            // Stop any playing audio
+            gameMusic.pause();
+            gameMusic.currentTime = 0;
+            gameOverSound.pause();
+            gameOverSound.currentTime = 0;
+            
+            // Start game music
+            gameMusic.play().catch(e => console.log("Audio couldn't start automatically:", e));
+            
+            // Load high score
+            const highScore = localStorage.getItem('highScore') || 0;
+            highScoreElement.textContent = highScore;
+
+            
             // Clear any existing dancers
             gameState.dancers.forEach(dancer => {
                 if (dancer.element.parentNode === gameContainer) {
@@ -1078,6 +1130,10 @@
         function gameOver() {
             gameState.isPlaying = false;
             cancelAnimationFrame(gameState.animationId);
+
+            // Stop game music and play game over sound
+            gameMusic.pause();
+            gameOverSound.play().catch(e => console.log("Game over audio couldn't start:", e));
             
             // Get a random game over message
             const randomMessage = gameState.gameOverMessages[Math.floor(Math.random() * gameState.gameOverMessages.length)];
@@ -1085,9 +1141,31 @@
             // Set the game over message
             gameOverMessage.textContent = randomMessage;
             
-            finalScoreElement.textContent = 'Score: ' + gameState.score;
+            // Update current score display
+            document.getElementById('final-score').textContent = gameState.score;
+            
+            // Get and update high score
+            let highScore = localStorage.getItem('highScore') || 0;
+            highScore = parseInt(highScore);
+            
+            if (gameState.score > highScore) {
+                highScore = gameState.score;
+                localStorage.setItem('highScore', highScore);
+            }
+            
+            document.getElementById('high-score').textContent = highScore;
+            
+            // Show game over screen
             gameOverScreen.style.display = 'flex';
         }
+        // Initialize Klark in the middle lane on page load
+        document.addEventListener("DOMContentLoaded", function() {
+            // Set initial position to middle lane (gameState.playerLane = 2)
+            const initialLaneY = gameState.lanes[2]; // Middle lane (index 2 of 5)
+            player.style.top = (initialLaneY - player.offsetHeight / 2) + 'px';
+            player.style.left = gameState.playerX + 'px';
+        });
+
 
     </script>
 </body>
